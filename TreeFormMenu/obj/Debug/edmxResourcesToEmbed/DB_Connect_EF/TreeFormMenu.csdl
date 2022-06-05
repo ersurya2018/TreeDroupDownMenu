@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TreeMenuModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="City">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="CityState_Id" Type="Int32" />
+    <NavigationProperty Name="State" Relationship="Self.FK__City__CityState___3B75D760" FromRole="City" ToRole="State" />
+  </EntityType>
+  <EntityType Name="country">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="States" Relationship="Self.FK__State__StateCoun__38996AB5" FromRole="country" ToRole="State" />
+  </EntityType>
+  <EntityType Name="State">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="StateCounty_Id" Type="Int32" />
+    <NavigationProperty Name="Cities" Relationship="Self.FK__City__CityState___3B75D760" FromRole="State" ToRole="City" />
+    <NavigationProperty Name="country" Relationship="Self.FK__State__StateCoun__38996AB5" FromRole="State" ToRole="country" />
+  </EntityType>
+  <Association Name="FK__City__CityState___3B75D760">
+    <End Role="State" Type="Self.State" Multiplicity="0..1" />
+    <End Role="City" Type="Self.City" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="State">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="City">
+        <PropertyRef Name="CityState_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__State__StateCoun__38996AB5">
+    <End Role="country" Type="Self.country" Multiplicity="0..1" />
+    <End Role="State" Type="Self.State" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="country">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="State">
+        <PropertyRef Name="StateCounty_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="TreeMenuEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Cities" EntityType="Self.City" />
+    <EntitySet Name="countries" EntityType="Self.country" />
+    <EntitySet Name="States" EntityType="Self.State" />
+    <AssociationSet Name="FK__City__CityState___3B75D760" Association="Self.FK__City__CityState___3B75D760">
+      <End Role="State" EntitySet="States" />
+      <End Role="City" EntitySet="Cities" />
+    </AssociationSet>
+    <AssociationSet Name="FK__State__StateCoun__38996AB5" Association="Self.FK__State__StateCoun__38996AB5">
+      <End Role="country" EntitySet="countries" />
+      <End Role="State" EntitySet="States" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

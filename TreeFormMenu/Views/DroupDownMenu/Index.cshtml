@@ -1,0 +1,149 @@
+﻿<style>
+    .outer {
+        margin-top: 50px;
+    }
+</style>
+
+<div class="container outer">
+    <form>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <select class="form-control" id="Country">
+                        <option>--Select State--</option>
+                    </select>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+            <br />
+            <br />
+
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <select class="form-control" id="state">
+                        <option>--Select State--</option>
+                    </select>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+            <br />
+            <br />
+
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <select class="form-control" id="city">
+                        <option>--Select City--</option>
+                    </select>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+            <br />
+            <br />
+
+            <div class="row">
+                <div class="col-sm-3"></div>
+                <div class="col-sm-6">
+                    <button class="btn btn-success">Submit</button>
+                </div>
+                <div class="col-sm-3"></div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        countyData();
+        //here we Bind The Data of State
+        $("#Country").change(function () {
+            var id = $(this).val();
+            $("#state").empty();
+            $.get("../DroupDownMenu/StateName",{ country_id: id },
+                function (data) {
+                    var SData = "<option>---Select---</option>";
+                    $.each(data, function (i, v1) {
+                        SData += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                    });
+                    $("#state").html(SData);
+                });
+        });
+
+        //here we Bond The Data of City
+
+        $("#state").change(function () {
+            var id = $(this).val();
+            $("#city").empty();
+            $.get("../DroupDownMenu/CityName", { state_id: id }, function (data) {
+                var v = "<option>---Select---</option>";
+                $.each(data, function (i, v1) {
+                    v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                });
+                $("#city").html(v);
+            });
+        });
+        //$("#state").change(function () {
+        //    var id = $(this).val();
+        //    $("#city").empty();
+        //    $.get("../DroupDownMenu/CityName", { State_id : id }, function (data) {
+        //        var v = "<option>---Select---</option>";
+        //        $.each(data, function (i, v1) {
+        //            v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+        //        });
+        //        $("#city").html(v);
+        //    });
+        //});
+
+    });
+
+
+
+    //here we write the code for Country Data onload windows
+    function countyData() {
+        //alert("hii");
+        $.ajax({
+            url: '/DroupDownMenu/CountryName',
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                /*debugger*/
+                 /*console.log(result.data);*/
+                $("#Country").empty();
+                var CData = "<option>-- Select Country -- </option>";
+                for (var i = 0; i < result.data.length; i++) {
+                    CData = CData + "<option value=" + result.data[i].Value + ">" + result.data[i].Text + "</option>";
+                }
+                $("#Country").html(CData);
+            }
+
+        });
+    }
+
+
+
+
+    //$(function () {
+    //    $.ajax({
+    //        url: '/DroupDownMenu/CountryName',
+    //        type: "GET",
+    //        contentType: "application/json;charset=utf-8",
+    //        dataType: "json",
+    //        success: function (result) {
+    //            $("#Country").empty();
+    //            var v = "<option>---Select---</option>";
+    //            for (var i = 0; i < result.data.length; i++) {
+    //                v += "<option value=" + result.data[i].Value + ">" + result.data[i].Text + "</option>";
+    //            }
+    //            $("#Country").html(v);
+    //        }
+
+    //    });
+    //})
+</script>
+
+
